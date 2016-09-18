@@ -4,6 +4,7 @@ var firebase = require('firebase');
 var twilio = require('twilio');
 var bodyParser = require('body-parser');
 var schedule = require('node-schedule');
+var request = require('request');
 
 app.use(bodyParser.urlencoded({extended: false}));
 
@@ -145,6 +146,21 @@ function parseMessage(phoneNumber, message) {
     } else if (message.toLowerCase() === 'assist') {
         var responseMessage = 'assist -- Get a list of available commands\nread <BOOK-NAME> -- Subscribe to a book of your choice\nwhat -- See what book you\'re currently reading\nnext -- Get the next snippet of the book\ndone -- Stop your current subscription'
         sendMessage(phoneNumber, responseMessage);
+    } else if (message.toLowerCase().indexOf('dict') != -1) {
+        var messageArray = message.toLowerCase().split(' ');
+        var word = messageArray[1];
+
+        var baseURL = "http://api.pearson.com/v2/dictionaries/entries?headword=";
+        var finalURL = baseURL.concat(word)
+
+        request(finalURL, (error, response, body) => {
+            if (!error && response.statusCode === 200) {
+                const responseData = JSON.parse(body)
+                sendMessage(phoneNumber, responseData["results"][0]["senses"][0]["definition"])
+            } else {
+                console.log("Got an error: ", error, ", status code: ", response.statusCode)
+            }     
+        })
     } else if (message.toLowerCase().indexOf('read') != -1) {
         // message is probably a title of a book
         // if the user already exists, we change their book and curSnippet
