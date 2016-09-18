@@ -12,6 +12,7 @@
     "body-parser": "^1.15.2",
     "express.js": "^1.0.0",
     "firebase": "^3.4.0",
+    "node-schedule": "^1.1.1",
     "twilio": "^2.9.3"
   }
 }

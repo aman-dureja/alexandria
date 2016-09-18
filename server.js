@@ -3,6 +3,7 @@ var app = express();
 var firebase = require('firebase');
 var twilio = require('twilio');
 var bodyParser = require('body-parser');
+var schedule = require('node-schedule');
 
 app.use(bodyParser.urlencoded({extended: false}));
 
@@ -207,6 +208,15 @@ function gotPhoneNumber(phoneNumber, message) {
 
 app.post('/twilio-incoming', function(req, res) {
 	gotPhoneNumber(req.body.From, req.body.Body);
+});
+
+schedule.scheduleJob('0 0 12 * * *', function(){
+  firebase.database().ref('phonenumbers').once('value').then(function(snapshot) {
+  	var users = snapshot.val();
+  	for (key in users) {
+  		gotPhoneNumber(users[key], 'next');
+  	}
+  });
 });
 
 app.listen(process.env.port || 8080);
