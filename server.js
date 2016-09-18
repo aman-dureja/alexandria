@@ -269,6 +269,22 @@ function parseMessage(phoneNumber, message) {
         }).catch(function(err) {
             console.log(err);
         });
+    } else if (message.toLowerCase() === 'suggest') { 
+        firebase.database().ref('books').once('value').then(function(snapshot) {
+            var books = snapshot.val();
+
+            var bookTitles = [];
+
+            for (key in books) {
+                bookTitles.push(books[key].title);
+            }
+
+            var bookTitle = bookTitles[Math.floor(Math.random()*bookTitles.length)];
+            var responseMessage = "You might like " + bookTitle;
+            sendMessage(phoneNumber, responseMessage);
+        }).catch(function(err) {
+            console.log(err);
+        });
     } else {
         var responseMessage = 'Hello! -- Get a list of available commands\nread <BOOK-NAME> -- Subscribe to a book of your choice\nwhat -- See what book you\'re currently reading\nnext -- Get the next snippet of the book\nprev -- Get the previous snippet of the book\ndefine <WORD> -- Get a dictionary defintion for WORD\ndone -- Stop your current subscription'
         sendMessage(phoneNumber, responseMessage);
