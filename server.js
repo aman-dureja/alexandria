@@ -209,5 +209,5 @@ app.post('/twilio-incoming', function(req, res) {
 	gotPhoneNumber(req.body.From, req.body.Body);
 });
 
-app.listen(8080);
+app.listen(process.env.port || 8080);
 console.log('THINGS ARE HAPPENING!');
