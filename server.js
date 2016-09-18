@@ -99,7 +99,7 @@ function sendNextSnippet(userRef) {
 }
 
 function parseMessage(phoneNumber, message) {
-	if (message.toLowerCase() === 'stop') {
+	if (message.toLowerCase() === 'done') {
 		var usersRef = firebase.database().ref('users');
 		usersRef.once('value').then(function(snapshot) {
 			var users = snapshot.val();
@@ -110,6 +110,8 @@ function parseMessage(phoneNumber, message) {
 						book: 'Unsubscribed',
 						curSnippet: 1
 					});
+					sendMessage(phoneNumber, 'You are now unsubscribed. Text \'assist\' for more info.');
+					break;
 				}
 			}
 		}).catch(function(err) {
@@ -127,8 +129,22 @@ function parseMessage(phoneNumber, message) {
 			}
 		}).catch(function(err) {
 			console.log(err);
-		})
-	} else if (message) {
+		});
+	} else if (message.toLowerCase() === 'what') {
+		firebase.database().ref('users').once('value').then(function(snapshot) {
+			var users = snapshot.val();
+			for (key in users) {
+				if (users[key].phoneNumber === phoneNumber) {
+					sendMessage(phoneNumber, 'You are currently reading:\n'+users[key].book);
+				}
+			}
+		}).catch(function(err) {
+			console.log(err);
+		});
+	} else if (message.toLowerCase() === 'assist') {
+		var responseMessage = 'assist -- Get a list of available commands\nread <BOOK-NAME> -- Subscribe to a book of your choice\nwhat -- See what book you\'re currently reading\nnext -- Get the next snippet of the book\ndone -- Stop your current subscription'
+		sendMessage(phoneNumber, responseMessage);
+	} else if (message.toLowerCase().indexOf('read') != -1) {
 		// message is probably a title of a book
 		// if the user already exists, we change their book and curSnippet
 		// else we create the user with the new book
@@ -136,6 +152,7 @@ function parseMessage(phoneNumber, message) {
 		phonesRef.once('value').then(function(snapshot) {
 			var phoneNumbers = snapshot.val();
 			var userExists = false;
+			var messageBook = message.toLowerCase().split(' ')[1];
 			var bookExists = false;
 			for (key in phoneNumbers) {
 				if (phoneNumbers[key] === phoneNumber) {
@@ -145,8 +162,7 @@ function parseMessage(phoneNumber, message) {
 			firebase.database().ref('books').once('value').then(function(snapshot) {
 				var books = snapshot.val();
 				for (key in books) {
-					console.log(books[key]);
-					if (books[key].title.toLowerCase() === message.toLowerCase()) {
+					if (books[key].title.toLowerCase() === messageBook) {
 						bookExists = true;
 						break;
 					}
@@ -158,9 +174,10 @@ function parseMessage(phoneNumber, message) {
 							for (key in users) {
 								if (users[key].phoneNumber === phoneNumber) {
 									firebase.database().ref('users/'+key).update({
-										book: message,
+										book: messageBook,
 										curSnippet: 0
 									});
+									sendMessage(phoneNumber, 'You are now subscribed to ' + messageBook + '! Text \'assist\' for help.');
 									sendNextSnippet(firebase.database().ref('users/'+key));
 									break;
 								}
@@ -169,7 +186,7 @@ function parseMessage(phoneNumber, message) {
 							console.log(err);
 						});
 					} else {
-						createNewUser(phoneNumber, message);
+						createNewUser(phoneNumber, messageBook);
 					}
 				} else {
 					sendMessage(phoneNumber, 'Sorry, that was either an invalid command or we don\'t have that book in our library. Text "help" any time for assistance!');
