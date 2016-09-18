@@ -197,9 +197,6 @@ function parseMessage(phoneNumber, message) {
         }).catch(function(err) {
             console.log(err);
         });
-    } else if (message.toLowerCase() === 'hello') {
-        var responseMessage = 'Hello! -- Get a list of available commands\nread <BOOK-NAME> -- Subscribe to a book of your choice\nwhat -- See what book you\'re currently reading\nnext -- Get the next snippet of the book\nprev -- Get the previous snippet of the book\ndefine <WORD> -- Get a dictionary defintion for WORD\ndone -- Stop your current subscription'
-        sendMessage(phoneNumber, responseMessage);
     } else if (message.toLowerCase() === 'assist') {
         var responseMessage = 'assist -- Get a list of available commands\nread <BOOK-NAME> -- Subscribe to a book of your choice\nwhat -- See what book you\'re currently reading\nnext -- Get the next snippet of the book\nprev -- Get the previous snippet of the book\ndefine <WORD> -- Get a dictionary defintion for WORD\ndone -- Stop your current subscription'
         sendMessage(phoneNumber, responseMessage);
@@ -272,6 +269,9 @@ function parseMessage(phoneNumber, message) {
         }).catch(function(err) {
             console.log(err);
         });
+    } else {
+        var responseMessage = 'Hello! -- Get a list of available commands\nread <BOOK-NAME> -- Subscribe to a book of your choice\nwhat -- See what book you\'re currently reading\nnext -- Get the next snippet of the book\nprev -- Get the previous snippet of the book\ndefine <WORD> -- Get a dictionary defintion for WORD\ndone -- Stop your current subscription'
+        sendMessage(phoneNumber, responseMessage);
     }
 }
 
