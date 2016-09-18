@@ -152,7 +152,8 @@ function parseMessage(phoneNumber, message) {
 		phonesRef.once('value').then(function(snapshot) {
 			var phoneNumbers = snapshot.val();
 			var userExists = false;
-			var messageBook = message.toLowerCase().split(' ')[1];
+			var messageArray = message.toLowerCase().split(' ');
+			var messageBook = messageArray.splice(1, messageArray.length-1).join(' ');
 			var bookExists = false;
 			for (key in phoneNumbers) {
 				if (phoneNumbers[key] === phoneNumber) {
