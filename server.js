@@ -6,8 +6,8 @@ var bodyParser = require('body-parser');
 
 app.use(bodyParser.urlencoded({extended: false}));
 
-var accountSid = 'AC689a075944a69e1bedcb582029dca896';
-var authToken = 'd9a63d580ef1e7067eec995443a8c6b5';
+var accountSid = '<SID>';
+var authToken = '<AUTH_TOKEN>';
 
 var client = new twilio.RestClient(accountSid, authToken);
 
@@ -17,11 +17,11 @@ app.use(function (req, res, next) {
 });
 
 var config = {
-	apiKey: "AIzaSyD_QqXPNLnKROWdQOttuR4ODbGxtdXgIpU",
-    authDomain: "alexandria-c0235.firebaseapp.com",
-    databaseURL: "https://alexandria-c0235.firebaseio.com",
-    storageBucket: "alexandria-c0235.appspot.com",
-    messagingSenderId: "590924027925"
+	apiKey: "<API_KEY>",
+    authDomain: "<AUTH_DOMAIN>",
+    databaseURL: "<DATABASE_URL>",
+    storageBucket: "<STORAGE_BUCKET>",
+    messagingSenderId: "<MESSAGE_SENDER_ID>"
 };
 firebase.initializeApp(config);
 
@@ -29,7 +29,7 @@ function sendMessage(phoneNumber, body) {
 	client.messages.create({
 		body: body,
 		to: phoneNumber,
-		from: '+12267804047'
+		from: '<FROM PHONE NUMBER>'
 	}, function(err, message) {
 		console.log(err||message);
 	});
