@@ -100,6 +100,47 @@ function sendNextSnippet(userRef) {
     });
 }
 
+function sendPrevSnippet(userRef) {
+    userRef.once('value').then(function(snapshot) {
+        var message = '';
+        var user = snapshot.val();
+        var phoneNumber = user.phoneNumber;
+        var curBook = user.book;
+        var curSnippet = user.curSnippet;
+        var booksRef = firebase.database().ref('books')
+        booksRef.once('value').then(function(bookSnapshot) {
+            var books = bookSnapshot.val();
+            for (key in books) {
+                if (books[key].title.toLowerCase() === curBook.toLowerCase()) {
+                    var snippetsRef = firebase.database().ref('books/'+key+'/snippets');
+                    snippetsRef.once('value').then(function(snippetsSnapshot) {
+                        var snippets = snippetsSnapshot.val();
+                        if (curSnippet > 1) {
+                            curSnippet -= 1
+                            message = snippets[curSnippet];
+                            userRef.update({
+                                curSnippet: curSnippet
+                            });
+                        } else {
+                            message = 'You have reached the beginning of the book! Send next to read more!';
+                        }
+                        sendMessage(phoneNumber, message);
+                    }).catch(function(err) {
+                        console.log(err);
+                    });
+                    break;
+                }
+            }
+        }).catch(function(err) {
+            console.log(err);
+        });
+    }).catch(function(err) {
+        console.log(err);
+    });
+}
+
+
+
 function parseMessage(phoneNumber, message) {
     if (message.toLowerCase() === 'done') {
         var usersRef = firebase.database().ref('users');
@@ -132,6 +173,19 @@ function parseMessage(phoneNumber, message) {
         }).catch(function(err) {
             console.log(err);
         });
+    } else if(message.toLowerCase() == 'prev') {
+        var usersRef = firebase.database().ref('users');
+        usersRef.once('value').then(function(snapshot) {
+            var users = snapshot.val();
+            for (key in users) {
+                if (users[key].phoneNumber === phoneNumber) {
+                    var userRef = firebase.database().ref('users/'+key);
+                    sendPrevSnippet(userRef);
+                }
+            }
+        }).catch(function(err) {
+            console.log(err);
+        });
     } else if (message.toLowerCase() === 'what') {
         firebase.database().ref('users').once('value').then(function(snapshot) {
             var users = snapshot.val();
@@ -144,9 +198,9 @@ function parseMessage(phoneNumber, message) {
             console.log(err);
         });
     } else if (message.toLowerCase() === 'assist') {
-        var responseMessage = 'assist -- Get a list of available commands\nread <BOOK-NAME> -- Subscribe to a book of your choice\nwhat -- See what book you\'re currently reading\nnext -- Get the next snippet of the book\ndone -- Stop your current subscription'
+        var responseMessage = 'assist -- Get a list of available commands\nread <BOOK-NAME> -- Subscribe to a book of your choice\nwhat -- See what book you\'re currently reading\nnext -- Get the next snippet of the book\nprev -- Get the previous snippet of the book\ndefine <WORD> -- Get a dictionary defintion for WORD\ndone -- Stop your current subscription'
         sendMessage(phoneNumber, responseMessage);
-    } else if (message.toLowerCase().indexOf('dict') != -1) {
+    } else if (message.toLowerCase().indexOf('define') != -1) {
         var messageArray = message.toLowerCase().split(' ');
         var word = messageArray[1];
 
