@@ -8,8 +8,8 @@ var request = require('request');
 
 app.use(bodyParser.urlencoded({extended: false}));
 
-var accountSid = '<SID>';
-var authToken = '<AUTH_TOKEN>';
+var accountSid = 'AC689a075944a69e1bedcb582029dca896';
+var authToken = 'd9a63d580ef1e7067eec995443a8c6b5';
 
 var client = new twilio.RestClient(accountSid, authToken);
 
@@ -19,11 +19,11 @@ app.use(function (req, res, next) {
 });
 
 var config = {
-    apiKey: "<API_KEY>",
-    authDomain: "<AUTH_DOMAIN>",
-    databaseURL: "<DATABASE_URL>",
-    storageBucket: "<STORAGE_BUCKET>",
-    messagingSenderId: "<MESSAGE_SENDER_ID>"
+    apiKey: "AIzaSyD_QqXPNLnKROWdQOttuR4ODbGxtdXgIpU",
+    authDomain: "alexandria-c0235.firebaseapp.com",
+    databaseURL: "https://alexandria-c0235.firebaseio.com",
+    storageBucket: "alexandria-c0235.appspot.com",
+    messagingSenderId: "590924027925"
 };
 firebase.initializeApp(config);
 
@@ -31,7 +31,7 @@ function sendMessage(phoneNumber, body) {
     client.messages.create({
         body: body,
         to: phoneNumber,
-        from: '<FROM PHONE NUMBER>'
+        from: '+12267804047'
     }, function(err, message) {
         console.log(err||message);
     });
@@ -159,7 +159,7 @@ function parseMessage(phoneNumber, message) {
                 sendMessage(phoneNumber, responseData["results"][0]["senses"][0]["definition"])
             } else {
                 console.log("Got an error: ", error, ", status code: ", response.statusCode)
-            }     
+            }
         })
     } else if (message.toLowerCase().indexOf('read') != -1) {
         // message is probably a title of a book
