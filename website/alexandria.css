@@ -1,0 +1,130 @@
+body {
+  margin: 0px;
+  font-family: 'Open Sans', sans-serif;
+}
+
+.main-intro {
+	position: relative;
+	display: flex;
+	flex-flow: column nowrap;
+	align-items: center;
+	justify-content: center;
+	height: 100vh;
+	width: 100%;
+	min-height: 100%;
+	color: #FFF;
+	text-align: center;
+	text-shadow: 2px 4px 3px rgba(0,0,0,0.3);
+	font-weight: 800;
+	font-family: 'fantasy', fantasy;
+}
+
+.header {
+	position: relative;
+	display: flex;
+	flex-flow: row nowrap;
+	justify-content: center;
+	text-align: center;
+	color: #FFF;
+	font-weight: 250;
+	font-size: 28px;
+}
+
+.main-intro h1 {
+	letter-spacing: 3px;
+	font-size: 150px;
+	z-index: 2;
+}
+
+.main-intro h3 {
+	position: relative;
+	z-index: 2;
+	font-size: 50px;
+	bottom: 150px;
+}
+
+.main-intro img {
+	position: absolute;
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 100vh;
+	-webkit-filter: brightness(65%);
+	filter: brightness(65%);
+}
+
+.section {
+	position: relative;
+	display: flex;
+	flex-flow: column nowrap;
+	justify-content: center;
+	align-items: center;
+	width: 100%;
+	min-height: 104vh;
+}
+
+.about-alexandria-container {
+	background-color: rgb(107, 116, 123);
+	display: flex;
+	flex-flow: column nowrap;
+}
+
+.about-alexandria {
+	position: relative;
+	display: flex;
+	flex-flow: column wrap;
+	justify-content: center;
+	align-items: center;
+	vertical-align: top;
+}
+
+.description-text {
+	color: #FFF;
+	font-size: 18px;
+	line-height: 133%;
+	font-weight: 300;
+	position: relative;
+	text-align: left;
+	width: 80%;
+}
+
+.screenshot-container {
+	text-align: center;
+	height: 300px;
+	width: 100px;
+}
+
+.about-alexandria img {
+	height: 500px;
+	width: 350px;
+}
+
+.picture-container {
+	text-align: center;
+}
+
+.screenshot {
+	flex-shrink: 0;
+	height: 300px;
+	width: 278px;
+	border-style: solid;
+	color: black;
+}
+
+.about-us-container {
+	background-color: rgb(119, 129, 136);
+}
+
+.about-us {
+	position: relative;
+	display: flex;
+	flex-flow: row wrap;
+	flex-align: center;
+	justify-content: center;
+}
+
+.team-members {
+	position: relative;
+	display: flex;
+	flex-flow: row wrap;
+}
