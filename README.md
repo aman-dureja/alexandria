@@ -1,4 +1,4 @@
-# alexandria-htn
+# alexandria
 HTN 2016 Project
 
 A back-end application that serves snippets from a digital library of public domain books via SMS protocols. 
