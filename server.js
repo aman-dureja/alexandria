@@ -27,6 +27,8 @@ var config = {
 };
 firebase.initializeApp(config);
 
+// Encapsulate functionality of sending a message through Twilio API
+
 function sendMessage(phoneNumber, body) {
     client.messages.create({
         body: body,
@@ -36,6 +38,8 @@ function sendMessage(phoneNumber, body) {
         console.log(err||message);
     });
 }
+
+// Create a new user and add them to the database
 
 function createNewUser(phoneNumber, book) {
   firebase.database().ref('users').push({
@@ -61,6 +65,8 @@ function createNewUser(phoneNumber, book) {
     console.log(err);
   });
 }
+
+// Function to send the next snippet of a book when a user requests it or when the scheduler runs
 
 function sendNextSnippet(userRef) {
     userRef.once('value').then(function(snapshot) {
@@ -99,6 +105,8 @@ function sendNextSnippet(userRef) {
         console.log(err);
     });
 }
+
+// Function to send previous snippet of a book
 
 function sendPrevSnippet(userRef) {
     userRef.once('value').then(function(snapshot) {
@@ -139,7 +147,7 @@ function sendPrevSnippet(userRef) {
     });
 }
 
-
+// Parse the input text message, looking for keywords and then executing the appropriate instructions
 
 function parseMessage(phoneNumber, message) {
     if (message.toLowerCase() === 'done') {
@@ -291,13 +299,19 @@ function parseMessage(phoneNumber, message) {
     }
 }
 
+// A message has been receieved. Do something with it.
+
 function gotPhoneNumber(phoneNumber, message) {
     parseMessage(phoneNumber, message);
 }
 
+// Whenever a new text message is received via a POST request to the Twilio API...
+
 app.post('/twilio-incoming', function(req, res) {
     gotPhoneNumber(req.body.From, req.body.Body);
 });
+
+// Set up scheduling to automatically perform an action for each user every 24 hours
 
 schedule.scheduleJob('0 0 12 * * *', function(){
   firebase.database().ref('phonenumbers').once('value').then(function(snapshot) {
